@@ -13,6 +13,15 @@ class GameScene: SKScene {
     
     var viewController: GameViewController!
     
+    var timer: NSTimer!
+    var goldTimer: NSTimer!
+    
+    var clock: Clock!
+    var timerLabel: SKLabelNode!
+    
+    var player1: Player!
+    var player2: Player!
+    
     override init(size: CGSize) {
         super.init(size: size)
     }
@@ -24,29 +33,12 @@ class GameScene: SKScene {
     override func didMoveToView(view: SKView) {
         self.backgroundColor = UIColor(red: 0, green: 0.4, blue: 0.04, alpha: 1)
         
-        /* Setup Base */
-        let castle = Castle()
-        castle.position = CGPointMake(castle.size.height/2, view.bounds.midY)
-        castle.zRotation = CGFloat(M_PI_2)
+        clock = Clock()
         
-        let wall = Wall()
-        let xShift = castle.size.height + (castle.size.height/4)
-        wall.position = CGPointMake(xShift, view.bounds.midY)
-        wall.zRotation = CGFloat(M_PI_2)
+        setupPlayers(view)
+        createButtons(view)
         
-        let castle2 = Castle()
-        castle2.position = CGPointMake(view.bounds.maxX-castle2.size.height/2, view.bounds.midY)
-        castle2.zRotation = CGFloat(-M_PI_2)
-        
-        let wall2 = Wall()
-        let xShift2 = view.bounds.maxX-(castle2.size.height + (castle2.size.height/4))
-        wall2.position = CGPointMake(xShift2, view.bounds.midY)
-        wall2.zRotation = CGFloat(-M_PI_2)
-        
-        self.addChild(castle)
-        self.addChild(wall)
-        self.addChild(castle2)
-        self.addChild(wall2)
+        startTimer(view)
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -54,19 +46,79 @@ class GameScene: SKScene {
         
         for touch: AnyObject in touches {
             let location = touch.locationInNode(self)
-            
-            /*let sprite = SKSpriteNode(imageNamed:"Spaceship")
-            
-            sprite.xScale = 0.5
-            sprite.yScale = 0.5
-            sprite.position = location
-            
-            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
-            
-            sprite.runAction(SKAction.repeatActionForever(action))
-            
-            self.addChild(sprite)*/
         }
+    }
+    
+    func createButtons(view: SKView) {
+        let buttonSize = 50
+        
+        let attackerTex = SKTexture(imageNamed: "sword")
+        let defenderTex = SKTexture(imageNamed: "shield")
+        let minerTex    = SKTexture(imageNamed: "pick")
+        
+        let attackerButton = SKSpriteNode(texture: attackerTex, size: CGSize(width: buttonSize, height: buttonSize))
+        let defenderButton = SKSpriteNode(texture: defenderTex, size: CGSize(width: buttonSize, height: buttonSize))
+        let minerButton    = SKSpriteNode(texture: minerTex,    size: CGSize(width: buttonSize, height: buttonSize))
+        
+        var buttonsX = view.bounds.minX + (attackerButton.size.width/2)
+        var buttonsY = view.bounds.minY + (attackerButton.size.height/2)
+        attackerButton.position = CGPointMake(buttonsX, buttonsY)
+        
+        buttonsX += (defenderButton.size.width * 0.75)
+        defenderButton.position = CGPointMake(buttonsX, buttonsY)
+        
+        buttonsX += (minerButton.size.width * 0.75)
+        minerButton.position = CGPointMake(buttonsX, buttonsY)
+        
+        self.addChild(attackerButton)
+        self.addChild(defenderButton)
+        self.addChild(minerButton)
+    }
+    
+    func setupPlayers(view: SKView) {
+        /* Setup Players/Bases */
+        player1 = Player()
+        player1.castle.position = CGPointMake(player1.castle.size.height/2, view.bounds.midY)
+        player1.castle.zRotation = CGFloat(M_PI_2)
+        
+        let xShift = player1.castle.size.height + (player1.castle.size.height/4)
+        player1.wall.position = CGPointMake(xShift, view.bounds.midY)
+        player1.wall.zRotation = CGFloat(M_PI_2)
+        
+        player2 = Player()
+        player2.castle.position = CGPointMake(view.bounds.maxX-player2.castle.size.height/2, view.bounds.midY)
+        player2.castle.zRotation = CGFloat(-M_PI_2)
+        
+        let xShift2 = view.bounds.maxX-(player2.castle.size.height + (player2.castle.size.height/4))
+        player2.wall.position = CGPointMake(xShift2, view.bounds.midY)
+        player2.wall.zRotation = CGFloat(-M_PI_2)
+        
+        self.addChild(player1.castle)
+        self.addChild(player1.wall)
+        self.addChild(player2.castle)
+        self.addChild(player2.wall)
+    }
+    
+    func incrementTimer() {
+        clock.tick()
+        timerLabel.text = clock.getTime()
+    }
+    
+    func incrementGold() {
+        player1.incrementGold()
+        player2.incrementGold()
+    }
+    
+    func startTimer(view: SKView) {
+        println("HERE")
+        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("incrementTimer"), userInfo: nil, repeats: true)
+        goldTimer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: Selector("incrementGold"), userInfo: nil, repeats: true)
+        
+        timerLabel = SKLabelNode(text: clock.getTime())
+        timerLabel.fontSize = 20
+        timerLabel.position = CGPointMake(view.bounds.midX, view.bounds.maxY-(timerLabel.frame.height))
+
+        self.addChild(timerLabel)
     }
     
     override func update(currentTime: CFTimeInterval) {

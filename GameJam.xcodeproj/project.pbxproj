@@ -21,6 +21,17 @@
 		B544DAFF1A2070E2004C69D0 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B544DAFE1A2070E2004C69D0 /* GameScene.swift */; };
 		B544DB011A2078CF004C69D0 /* castle.png in Resources */ = {isa = PBXBuildFile; fileRef = B544DB001A2078CF004C69D0 /* castle.png */; };
 		B544DB031A207C06004C69D0 /* wall.png in Resources */ = {isa = PBXBuildFile; fileRef = B544DB021A207C06004C69D0 /* wall.png */; };
+		B544DB051A208A3E004C69D0 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = B544DB041A208A3E004C69D0 /* Player.swift */; };
+		B544DB071A2090E8004C69D0 /* gold_mine.png in Resources */ = {isa = PBXBuildFile; fileRef = B544DB061A2090E8004C69D0 /* gold_mine.png */; };
+		B544DB091A2091FF004C69D0 /* GoldMine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B544DB081A2091FF004C69D0 /* GoldMine.swift */; };
+		B544DB0C1A2095D3004C69D0 /* knight1.png in Resources */ = {isa = PBXBuildFile; fileRef = B544DB0A1A2095D3004C69D0 /* knight1.png */; };
+		B544DB0D1A2095D3004C69D0 /* knight2.png in Resources */ = {isa = PBXBuildFile; fileRef = B544DB0B1A2095D3004C69D0 /* knight2.png */; };
+		B544DB0F1A2097CF004C69D0 /* path.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B544DB0E1A2097CF004C69D0 /* path.jpg */; };
+		B544DB131A209DA0004C69D0 /* hammer.png in Resources */ = {isa = PBXBuildFile; fileRef = B544DB101A209DA0004C69D0 /* hammer.png */; };
+		B544DB141A209DA0004C69D0 /* shield.png in Resources */ = {isa = PBXBuildFile; fileRef = B544DB111A209DA0004C69D0 /* shield.png */; };
+		B544DB151A209DA0004C69D0 /* sword.png in Resources */ = {isa = PBXBuildFile; fileRef = B544DB121A209DA0004C69D0 /* sword.png */; };
+		B544DB171A209EA9004C69D0 /* pick.png in Resources */ = {isa = PBXBuildFile; fileRef = B544DB161A209EA9004C69D0 /* pick.png */; };
+		B544DB191A20A790004C69D0 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B544DB181A20A790004C69D0 /* Clock.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +63,17 @@
 		B544DAFE1A2070E2004C69D0 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		B544DB001A2078CF004C69D0 /* castle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = castle.png; sourceTree = "<group>"; };
 		B544DB021A207C06004C69D0 /* wall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wall.png; sourceTree = "<group>"; };
+		B544DB041A208A3E004C69D0 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		B544DB061A2090E8004C69D0 /* gold_mine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gold_mine.png; sourceTree = "<group>"; };
+		B544DB081A2091FF004C69D0 /* GoldMine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoldMine.swift; sourceTree = "<group>"; };
+		B544DB0A1A2095D3004C69D0 /* knight1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = knight1.png; sourceTree = "<group>"; };
+		B544DB0B1A2095D3004C69D0 /* knight2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = knight2.png; sourceTree = "<group>"; };
+		B544DB0E1A2097CF004C69D0 /* path.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = path.jpg; sourceTree = "<group>"; };
+		B544DB101A209DA0004C69D0 /* hammer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hammer.png; sourceTree = "<group>"; };
+		B544DB111A209DA0004C69D0 /* shield.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shield.png; sourceTree = "<group>"; };
+		B544DB121A209DA0004C69D0 /* sword.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sword.png; sourceTree = "<group>"; };
+		B544DB161A209EA9004C69D0 /* pick.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pick.png; sourceTree = "<group>"; };
+		B544DB181A20A790004C69D0 /* Clock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Clock.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +117,9 @@
 			children = (
 				B544DAD11A204455004C69D0 /* AppDelegate.swift */,
 				B544DAD31A204455004C69D0 /* GameScene.sks */,
+				B544DB181A20A790004C69D0 /* Clock.swift */,
+				B544DB041A208A3E004C69D0 /* Player.swift */,
+				B544DB081A2091FF004C69D0 /* GoldMine.swift */,
 				B544DAF81A2048D9004C69D0 /* Castle.swift */,
 				B544DAFC1A206BEC004C69D0 /* Wall.swift */,
 				B544DAD51A204455004C69D0 /* MenuScene.swift */,
@@ -137,6 +162,14 @@
 		B544DAF51A2048B1004C69D0 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				B544DB161A209EA9004C69D0 /* pick.png */,
+				B544DB101A209DA0004C69D0 /* hammer.png */,
+				B544DB111A209DA0004C69D0 /* shield.png */,
+				B544DB121A209DA0004C69D0 /* sword.png */,
+				B544DB0E1A2097CF004C69D0 /* path.jpg */,
+				B544DB0A1A2095D3004C69D0 /* knight1.png */,
+				B544DB0B1A2095D3004C69D0 /* knight2.png */,
+				B544DB061A2090E8004C69D0 /* gold_mine.png */,
 				B544DB021A207C06004C69D0 /* wall.png */,
 				B544DB001A2078CF004C69D0 /* castle.png */,
 				B544DAFA1A206978004C69D0 /* wall1.png */,
@@ -226,11 +259,19 @@
 			files = (
 				B544DAE01A204455004C69D0 /* LaunchScreen.xib in Resources */,
 				B544DADD1A204455004C69D0 /* Images.xcassets in Resources */,
+				B544DB0F1A2097CF004C69D0 /* path.jpg in Resources */,
+				B544DB151A209DA0004C69D0 /* sword.png in Resources */,
 				B544DAD41A204455004C69D0 /* GameScene.sks in Resources */,
+				B544DB141A209DA0004C69D0 /* shield.png in Resources */,
 				B544DADB1A204455004C69D0 /* Main.storyboard in Resources */,
 				B544DB031A207C06004C69D0 /* wall.png in Resources */,
 				B544DAFB1A206978004C69D0 /* wall1.png in Resources */,
+				B544DB131A209DA0004C69D0 /* hammer.png in Resources */,
+				B544DB071A2090E8004C69D0 /* gold_mine.png in Resources */,
+				B544DB171A209EA9004C69D0 /* pick.png in Resources */,
+				B544DB0D1A2095D3004C69D0 /* knight2.png in Resources */,
 				B544DB011A2078CF004C69D0 /* castle.png in Resources */,
+				B544DB0C1A2095D3004C69D0 /* knight1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,10 +289,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B544DB091A2091FF004C69D0 /* GoldMine.swift in Sources */,
 				B544DAFF1A2070E2004C69D0 /* GameScene.swift in Sources */,
 				B544DAD61A204455004C69D0 /* MenuScene.swift in Sources */,
+				B544DB191A20A790004C69D0 /* Clock.swift in Sources */,
 				B544DAD81A204455004C69D0 /* GameViewController.swift in Sources */,
 				B544DAFD1A206BEC004C69D0 /* Wall.swift in Sources */,
+				B544DB051A208A3E004C69D0 /* Player.swift in Sources */,
 				B544DAD21A204455004C69D0 /* AppDelegate.swift in Sources */,
 				B544DAF91A2048D9004C69D0 /* Castle.swift in Sources */,
 			);
