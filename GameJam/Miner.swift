@@ -11,8 +11,6 @@ import SpriteKit
 
 class Miner: SKSpriteNode {
     
-    var health = 100
-    
     override init() {
         let texture = SKTexture(imageNamed: "worker_walk1")
         super.init(texture: texture, color: UIColor.clearColor(), size: CGSize(width: 25, height: 30))
@@ -44,13 +42,5 @@ class Miner: SKSpriteNode {
             images.append(tex)
         }
         return images
-    }
-    
-    func incrementHealth(value: Int) {
-        health += value
-    }
-    
-    func decrementHealth(value: Int) {
-        health -= value
     }
 }

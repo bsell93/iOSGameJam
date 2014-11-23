@@ -9,23 +9,35 @@
 import Foundation
 import SpriteKit
 
-class Attacker: SKSpriteNode {
+class Attacker: AttackableSprite {
     
-    var hitPoints = 100
+    var attackTimer: NSTimer!
     
-    var target: SKSpriteNode!
+    var target: AttackableSprite!
     
-    override init() {
-        let texture = SKTexture(imageNamed: "warrior_run1")
+    var playerNum = 0
+    
+    var attackPower: Float = 5
+    
+    init(playerNumber: Int) {
+        playerNum = playerNumber
+        var texture: SKTexture = SKTexture()
+        if playerNumber == 1 {
+            texture = SKTexture(imageNamed: "warrior_run1")
+        } else {
+            texture = SKTexture(imageNamed: "warrior1_run1")
+        }
         super.init(texture: texture, color: UIColor.clearColor(), size: CGSize(width: 25, height: 30))
+        self.maxHitPoints = 20
+        self.hitPoints = 20
     }
     
-    override init(texture: SKTexture!, color: UIColor!, size: CGSize) {
-        super.init(texture: texture, color: color, size: size)
-    }
-    
-    required convenience init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    func nearTarget() -> Bool {
+        if (target != nil) {
+            return target.frame.intersects(self.frame)
+        } else {
+            return false
+        }
     }
     
     func run() {
@@ -48,21 +60,26 @@ class Attacker: SKSpriteNode {
         self.runAction(repeatAnim, withKey: "attack")
     }
     
+    func idle() {
+        if playerNum == 1 {
+            self.texture = SKTexture(imageNamed: "warrior_attack1")
+        } else {
+            self.texture = SKTexture(imageNamed: "warrior1_attack1")
+        }
+    }
+    
     func fillImagesArray(action: String) -> Array<SKTexture> {
         var images: Array<SKTexture> = []
         for i in 1...6 {
-            let imgName = "warrior_\(action)\(i)"
+            var imgName: String = ""
+            if playerNum == 1 {
+                imgName = "warrior_\(action)\(i)"
+            } else {
+                imgName = "warrior1_\(action)\(i)"
+            }
             let tex = SKTexture(imageNamed: imgName)
             images.append(tex)
         }
         return images
-    }
-    
-    func incrementHealth(value: Int) {
-        hitPoints += value
-    }
-    
-    func decrementHealth(value: Int) {
-        hitPoints -= value
     }
 }

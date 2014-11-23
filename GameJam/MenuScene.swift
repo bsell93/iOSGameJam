@@ -36,24 +36,12 @@ class MenuScene: SKScene {
         for touch: AnyObject in touches {
             let location = touch.locationInNode(self)
             
-            /*let sprite = SKSpriteNode(imageNamed:"Spaceship")
-            
-            sprite.xScale = 0.5
-            sprite.yScale = 0.5
-            sprite.position = location
-            
-            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
-            
-            sprite.runAction(SKAction.repeatActionForever(action))
-            
-            self.addChild(sprite)*/
-            
             let obj = nodeAtPoint(location)
             
             if (obj == beginLabel) {
-                let game = GameScene(size: viewController.view.bounds.size)
-                game.viewController = viewController
-                viewController.skView.presentScene(game)
+                let ability = AbilityScene(size: viewController.view.bounds.size)
+                ability.viewController = viewController
+                viewController.skView.presentScene(ability)
             }
         }
     }

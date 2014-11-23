@@ -13,6 +13,8 @@ class GameScene: SKScene {
     
     var viewController: GameViewController!
     
+    var gameOver: Bool = false
+    
     var timer: NSTimer!
     var goldTimer: NSTimer!
     
@@ -20,7 +22,9 @@ class GameScene: SKScene {
     var timerLabel: SKLabelNode!
     
     var player1: Player!
-    var player2: Player!
+    var computer: Computer!
+    
+    var p1Ability: Ability!
     
     var p1GoldLabel: SKLabelNode!
     var p2GoldLabel: SKLabelNode!
@@ -50,17 +54,7 @@ class GameScene: SKScene {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setUpAttackerPaths() {
-        /* Attacker Path */
-        p1AttackerPath = CGPathCreateMutable()
-        p2AttackerPath = CGPathCreateMutable()
-        
-        CGPathMoveToPoint(p1AttackerPath, nil, p1StartingPosition.x, p1StartingPosition.y)
-        CGPathMoveToPoint(p2AttackerPath, nil, p2StartingPosition.x, p2StartingPosition.y)
-        
-        CGPathAddLineToPoint(p1AttackerPath, nil, p2StartingPosition.x, p2StartingPosition.y)
-        CGPathAddLineToPoint(p2AttackerPath, nil, p1StartingPosition.x, p1StartingPosition.y)
-        
+    func setUpMinerPaths() {
         /* Miner Path */
         p1MinerPath = CGPathCreateMutable()
         p2MinerPath = CGPathCreateMutable()
@@ -69,12 +63,12 @@ class GameScene: SKScene {
         CGPathMoveToPoint(p2MinerPath, nil, p2StartingPosition.x, p2StartingPosition.y)
         
         CGPathAddLineToPoint(p1MinerPath, nil, player1.goldMine.position.x, player1.goldMine.position.y - player1.goldMine.size.height)
-        CGPathAddLineToPoint(p2MinerPath, nil, player2.goldMine.position.x, player2.goldMine.position.y + player2.goldMine.size.height)
+        CGPathAddLineToPoint(p2MinerPath, nil, computer.goldMine.position.x, computer.goldMine.position.y + computer.goldMine.size.height)
     }
     
     func createGoldLabels(view: SKView) {
         p1GoldLabel = SKLabelNode(text: "Gold: \(player1.gold)")
-        p2GoldLabel = SKLabelNode(text: "Gold: \(player2.gold)")
+        p2GoldLabel = SKLabelNode(text: "Gold: \(computer.gold)")
         
         p1GoldLabel.fontSize = labelFontSize * 2
         p2GoldLabel.fontSize = labelFontSize * 2
@@ -141,18 +135,19 @@ class GameScene: SKScene {
         /* Setup Players/Bases */
         // Player 1
         player1 = Player(view: view)
+        player1.ability = p1Ability
         player1.setPosition("left")
-        p1StartingPosition = CGPointMake(player1.wall.position.x + 50, player1.wall.position.y)
+        p1StartingPosition = CGPointMake(player1.wall.position.x + (Attacker(playerNumber: 1).frame.width * 1.5), player1.wall.position.y)
         
         // Player 2
-        player2 = Player(view: view)
-        player2.setPosition("right")
-        p2StartingPosition = CGPointMake(player2.wall.position.x - 50, player2.wall.position.y)
+        computer = Computer(view: view)
+        computer.setPosition("right")
+        p2StartingPosition = CGPointMake(computer.wall.position.x - (Attacker(playerNumber: 2).frame.width * 1.5), computer.wall.position.y)
         
         for sprite in player1.sprites {
             self.addChild(sprite)
         }
-        for sprite in player2.sprites {
+        for sprite in computer.sprites {
             self.addChild(sprite)
         }
     }
@@ -167,14 +162,17 @@ class GameScene: SKScene {
         self.addChild(p1NumMinersLabel)
     }
     
-    func incrementTimer() {
+    func incrementTimer(timer: NSTimer) {
         clock.tick()
         timerLabel.text = clock.getTime()
+        
+        let view = timer.userInfo as SKView
+        computer.decide(view, enemy: player1, scene: self)
     }
     
     func incrementGold() {
         player1.incrementGold()
-        player2.incrementGold()
+        computer.incrementGold()
         
         updateGoldLabel()
     }
@@ -182,7 +180,7 @@ class GameScene: SKScene {
     func updateGoldLabel() {
         p1GoldLabel.text = "Gold: \(player1.gold)"
         p1GoldLabel.position = CGPointMake(viewController.skView.bounds.minX + (p2GoldLabel.frame.width / 2), viewController.skView.bounds.maxY - p1GoldLabel.frame.height)
-        p2GoldLabel.text = "Gold: \(player2.gold)"
+        p2GoldLabel.text = "Gold: \(computer.gold)"
     }
     
     func updateNumMinersLabel() {
@@ -190,7 +188,7 @@ class GameScene: SKScene {
     }
     
     func startTimer(view: SKView) {
-        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("incrementTimer"), userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("incrementTimer:"), userInfo: view, repeats: true)
         goldTimer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: Selector("incrementGold"), userInfo: nil, repeats: true)
         
         timerLabel = SKLabelNode(text: clock.getTime())
@@ -198,6 +196,48 @@ class GameScene: SKScene {
         timerLabel.position = CGPointMake(view.bounds.midX, view.bounds.maxY-(timerLabel.frame.height))
 
         self.addChild(timerLabel)
+    }
+    
+    func attack(timer: NSTimer) {
+        if !gameOver {
+            var attacker = timer.userInfo as Attacker
+            if !attacker.target.destroyed {
+                attacker.target.decrementHealth(attacker.attackPower)
+                if (attacker.target.hitPoints <= 0) {
+                    if let index = find(computer.attackableSprites, attacker.target) {
+                        computer.attackableSprites.removeAtIndex(index)
+                    }
+                    attacker.removeActionForKey("attack")
+                    attacker.idle()
+                }
+            } else if !computer.attackableSprites.isEmpty {
+                player1.findTarget(attacker, enemySprites: computer.attackableSprites)
+            } else {
+                attacker.removeActionForKey("attack")
+                attacker.idle()
+            }
+        }
+    }
+    
+    func attackPlayer(timer: NSTimer) {
+        if !gameOver {
+            var attacker = timer.userInfo as Attacker
+            if !attacker.target.destroyed {
+                attacker.target.decrementHealth(attacker.attackPower)
+                if (attacker.target.hitPoints <= 0) {
+                    if let index = find(player1.attackableSprites, attacker.target) {
+                        player1.attackableSprites.removeAtIndex(index)
+                    }
+                    attacker.removeActionForKey("attack")
+                    attacker.idle()
+                }
+            } else if !player1.attackableSprites.isEmpty {
+                computer.findTarget(attacker, enemySprites: player1.attackableSprites)
+            } else {
+                attacker.removeActionForKey("attack")
+                attacker.idle()
+            }
+        }
     }
     
     override func didMoveToView(view: SKView) {
@@ -212,7 +252,7 @@ class GameScene: SKScene {
         createButtons(view)
         createGoldLabels(view)
         setupNumMiners()
-        setUpAttackerPaths()
+        setUpMinerPaths()
         
         startTimer(view)
     }
@@ -227,24 +267,22 @@ class GameScene: SKScene {
             
             if node == attackerButton {
                 if (player1.attackerCost <= player1.gold) {
-                    let attacker = Attacker()
+                    let attacker = Attacker(playerNumber: 1)
                     
-                    attacker.target = player2.wall
+                    player1.attackers.append(attacker)
+                    player1.attackableSprites.append(attacker)
                     
                     player1.decrementGold(player1.attackerCost)
                     
                     updateGoldLabel()
                     
-                    attacker.position = p1StartingPosition
+                    attacker.position = player1.startingPoint
                     
-                    let path = SKAction.followPath(p1AttackerPath, asOffset: false, orientToPath: false, duration: 15)
+                    if (player1.ability == Ability.Attacker) {
+                        attacker.attackPower *= 2
+                    }
                     
-                    attacker.run()
-                    
-                    attacker.runAction(path, completion: {
-                        attacker.removeActionForKey("run")
-                        attacker.attack()
-                    })
+                    player1.findTarget(attacker, enemySprites: computer.attackableSprites)
                     
                     self.addChild(attacker)
                 }
@@ -256,7 +294,11 @@ class GameScene: SKScene {
                     
                     updateGoldLabel()
                     
-                    miner.position = p1StartingPosition
+                    miner.position = player1.startingPoint
+                    
+                    if (player1.ability == Ability.Miner) {
+                        player1.minerMultiplier = 2
+                    }
                     
                     let path = SKAction.followPath(p1MinerPath, asOffset: false, orientToPath: false, duration: 5)
                     
@@ -276,6 +318,33 @@ class GameScene: SKScene {
     }
     
     override func update(currentTime: CFTimeInterval) {
-        /* Called before each frame is rendered */
+        if player1.castle.hitPoints <= 0 || computer.castle.hitPoints <= 0 {
+            gameOver = true
+            var menu = MenuScene(size: viewController.view.bounds.size)
+            menu.viewController = viewController
+            viewController.skView.presentScene(menu)
+        }
+        for attacker in player1.attackers {
+            if attacker.nearTarget() {
+                if attacker.attackTimer == nil {
+                    attacker.attackTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("attack:"), userInfo: attacker, repeats: true)
+                }
+            }
+            if computer.attackableSprites.isEmpty {
+                attacker.removeAllActions()
+                attacker.idle()
+            }
+        }
+        for attacker in computer.attackers {
+            if attacker.nearTarget() {
+                if attacker.attackTimer == nil {
+                    attacker.attackTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("attackPlayer:"), userInfo: attacker, repeats: true)
+                }
+            }
+            if player1.attackableSprites.isEmpty {
+                attacker.removeAllActions()
+                attacker.idle()
+            }
+        }
     }
 }

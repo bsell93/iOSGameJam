@@ -40,7 +40,7 @@ class HealthBar: SKSpriteNode {
     }
     
     func setHealth(value: Float) {
-        health = value
+        health = value * 100
         if health == 100 {
             self.texture = textures[100]
         } else if health >= 95 {

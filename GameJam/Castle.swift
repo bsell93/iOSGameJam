@@ -9,38 +9,15 @@
 import Foundation
 import SpriteKit
 
-class Castle: SKSpriteNode {
-    
-    var healthBar: HealthBar!
-    
-    var maxHitPoints: Float = 500
-    var hitPoints: Float = 500
+class Castle: AttackableSprite {
     
     init(view: SKView) {
         let texture = SKTexture(imageNamed: "castle")
         super.init(texture: texture, color: UIColor.clearColor(), size: CGSize(width: 100, height: 75))
-        healthBar = HealthBar(view: view)
-    }
-    
-    override init(texture: SKTexture!, color: UIColor!, size: CGSize) {
-        super.init(texture: texture, color: color, size: size)
-    }
-
-    required convenience init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func incrementHealth(value: Float) {
-        hitPoints += value
-        healthBar.setHealth(hitPoints / maxHitPoints)
-    }
-    
-    func decrementHealth(value: Float) {
-        hitPoints -= value
-        healthBar.setHealth(hitPoints / maxHitPoints)
-        if hitPoints <= 0 {
-            healthBar.removeFromParent()
-            self.removeFromParent()
-        }
+        
+        self.maxHitPoints = 500
+        self.hitPoints = 500
+        
+        self.healthBar = HealthBar(view: view)
     }
 }
