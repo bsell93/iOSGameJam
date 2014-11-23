@@ -1,5 +1,5 @@
 //
-//  GoldMine.swift
+//  Defender.swift
 //  GameJam
 //
 //  Created by Bryant_Sell on 11/22/14.
@@ -9,13 +9,13 @@
 import Foundation
 import SpriteKit
 
-class GoldMine: SKSpriteNode {
+class Defender: SKSpriteNode {
     
-    var workers: Int = 0
+    var health = 100
     
     override init() {
-        let texture = SKTexture(imageNamed: "gold_mine")
-        super.init(texture: texture, color: UIColor.clearColor(), size: CGSize(width: 50, height: 50))
+        let texture = SKTexture(imageNamed: "castle")
+        super.init(texture: texture, color: UIColor.clearColor(), size: CGSize(width: 100, height: 75))
     }
     
     override init(texture: SKTexture!, color: UIColor!, size: CGSize) {
@@ -26,11 +26,11 @@ class GoldMine: SKSpriteNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func incrementWorkers() {
-        workers += 1
+    func incrementHealth(value: Int) {
+        health += value
     }
     
-    func decrementWorkers() {
-        workers -= 1
+    func decrementHealth(value: Int) {
+        health -= value
     }
 }

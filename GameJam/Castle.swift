@@ -11,11 +11,15 @@ import SpriteKit
 
 class Castle: SKSpriteNode {
     
-    var health = 100
+    var healthBar: HealthBar!
     
-    override init() {
+    var maxHitPoints: Float = 500
+    var hitPoints: Float = 500
+    
+    init(view: SKView) {
         let texture = SKTexture(imageNamed: "castle")
         super.init(texture: texture, color: UIColor.clearColor(), size: CGSize(width: 100, height: 75))
+        healthBar = HealthBar(view: view)
     }
     
     override init(texture: SKTexture!, color: UIColor!, size: CGSize) {
@@ -26,7 +30,17 @@ class Castle: SKSpriteNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func decreaseHealth(value: Int) {
-        health -= value
+    func incrementHealth(value: Float) {
+        hitPoints += value
+        healthBar.setHealth(hitPoints / maxHitPoints)
+    }
+    
+    func decrementHealth(value: Float) {
+        hitPoints -= value
+        healthBar.setHealth(hitPoints / maxHitPoints)
+        if hitPoints <= 0 {
+            healthBar.removeFromParent()
+            self.removeFromParent()
+        }
     }
 }
